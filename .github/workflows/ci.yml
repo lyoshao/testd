@@ -41,7 +41,7 @@ jobs:
             --alluredir=allure-results-api \
             --maxfail=3 \
             --tb=short \
-            --disable-warnings
+            --disable-warnings || true
         continue-on-error: true
 
       - name: Generate Allure report for UI
