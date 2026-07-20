@@ -7,6 +7,7 @@ from playwright.sync_api import sync_playwright
 
 @pytest.fixture(scope="function")
 def page():
+    """Создает новую страницу браузера для каждого теста."""
     with sync_playwright() as p:
         is_ci = os.environ.get("CI") == "true"
         browser = p.chromium.launch(

@@ -7,6 +7,7 @@ from pages.base_page import BasePage
 class MainPage(BasePage):
     """Главная страница Wildberries."""
 
+    # Локаторы
     SEARCH_INPUT = "input#searchInput"
     CATALOG_BUTTON = "button[data-wba-header-name='Catalog']"
     CATALOG_CONTAINER = "div#menuBurger"
@@ -27,7 +28,7 @@ class MainPage(BasePage):
         self.page.keyboard.press("Enter")
         self.page.wait_for_load_state("domcontentloaded")
         self.page.wait_for_timeout(1500)
-    
+
     def is_search_button_visible(self) -> bool:
         """Проверяет, видима ли кнопка поиска."""
         try:

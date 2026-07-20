@@ -11,6 +11,7 @@ from pages.search_page import SearchPage
 class TestSearch:
     """Тесты для поиска на Wildberries."""
 
+    # Поисковые запросы
     QUERIES = {
         "product": "кроссовки",
         "brand": "Adidas",

@@ -12,6 +12,7 @@ from pages.product_page import ProductPage
 class TestProduct:
     """Тесты для карточки товара Wildberries."""
 
+    # Поисковые запросы
     SEARCH_QUERIES = {
         "phone": "телефон",
         "laptop": "ноутбук",

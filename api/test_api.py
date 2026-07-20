@@ -5,12 +5,6 @@ import allure
 import pytest
 from api.api_client import APIClient
 
-if os.environ.get("CI") == "true":
-    pytest.skip(
-        "API тесты пропущены в CI (Fake Store API блокирует запросы из GitHub Actions)",
-        allow_module_level=True
-    )
-
 
 @allure.epic("Тестирование API")
 @allure.feature("Проверка продуктов")
@@ -22,7 +16,9 @@ class TestProductsAPI:
         """Тест 1: Получение списка всех продуктов."""
         client = APIClient()
         response = client.get("products")
+
         assert response.status_code == 200, f"Ошибка: {response.status_code}"
+
         products = response.json()
         assert isinstance(products, list), "Ответ должен быть списком"
         assert len(products) > 0, "Список продуктов не должен быть пустым"
@@ -33,7 +29,9 @@ class TestProductsAPI:
         """Тест 2: Получение продукта по ID."""
         client = APIClient()
         response = client.get("products/1")
+
         assert response.status_code == 200, f"Ошибка: {response.status_code}"
+
         product = response.json()
         assert product["id"] == 1, "ID должен быть 1"
         assert "title" in product, "Должно быть поле 'title'"
@@ -45,10 +43,13 @@ class TestProductsAPI:
         """Тест 3: Получение списка всех категорий."""
         client = APIClient()
         response = client.get("products/categories")
+
         assert response.status_code == 200, f"Ошибка: {response.status_code}"
+
         categories = response.json()
         assert isinstance(categories, list), "Ответ должен быть списком"
         assert len(categories) > 0, "Должны быть категории"
+
         expected_categories = [
             "electronics",
             "jewelery",
@@ -73,7 +74,9 @@ class TestAuthAPI:
             "password": "m38rmF$"
         }
         response = client.post("auth/login", json=credentials)
+
         assert response.status_code == 201, f"Ожидался 201, получен {response.status_code}"
+
         token = response.json()
         assert "token" in token, "Должен быть получен токен"
         assert isinstance(token["token"], str), "Токен должен быть строкой"
@@ -88,4 +91,5 @@ class TestAuthAPI:
             "password": "wrongpassword"
         }
         response = client.post("auth/login", json=credentials)
+
         assert response.status_code == 401, f"Ожидался 401, получен {response.status_code}"
