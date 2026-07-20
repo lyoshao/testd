@@ -11,7 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -69,12 +68,12 @@ jobs:
           name: allure-report-ui
           path: allure-report-ui
 
-      - name: Upload Allure report API
-        if: always()
+      - name: Upload Allure results API
+        if: always() && hashFiles('allure-results-api') != ''
         uses: actions/upload-artifact@v4
         with:
-          name: allure-report-api
-          path: allure-report-api
+          name: allure-results-api
+          path: allure-results-api
 
       - name: Upload Allure results UI
         if: always()
@@ -83,9 +82,9 @@ jobs:
           name: allure-results-ui
           path: allure-results-ui
 
-      - name: Upload Allure results API
-        if: always() && hashFiles('allure-results-api') != ''
+      - name: Upload Allure report API
+        if: always() && hashFiles('allure-report-api') != ''
         uses: actions/upload-artifact@v4
         with:
-          name: allure-results-api
-          path: allure-results-api
+          name: allure-report-api
+          path: allure-report-api
