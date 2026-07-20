@@ -9,6 +9,8 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       - name: Checkout code
@@ -53,7 +55,12 @@ jobs:
       - name: Generate Allure report for API
         if: always()
         run: |
-          allure generate allure-results-api -o allure-report-api --clean
+          npm install -g allure-commandline
+          if [ -d "allure-results-api" ] && [ "$(ls -A allure-results-api)" ]; then
+            allure generate allure-results-api -o allure-report-api --clean
+          else
+            echo "No API results found. Skipping report generation."
+          fi
 
       - name: Upload Allure report UI
         if: always()
@@ -77,7 +84,7 @@ jobs:
           path: allure-results-ui
 
       - name: Upload Allure results API
-        if: always()
+        if: always() && hashFiles('allure-results-api') != ''
         uses: actions/upload-artifact@v4
         with:
           name: allure-results-api
