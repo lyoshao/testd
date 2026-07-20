@@ -8,7 +8,6 @@ from pages.search_page import SearchPage
 class TestSearch:
     """Тесты для поиска на Wildberries."""
 
-    # Поисковые запросы
     QUERIES = {
         "product": "кроссовки",
         "brand": "Adidas",
@@ -29,12 +28,16 @@ class TestSearch:
         ), "Поле поиска не видно"
 
     def test_search_button_is_visible(self, page):
-        """Тест 2: Проверка видимости поля поиска (кнопки нет, поиск по Enter)."""
+        """Тест 2: Проверка появления кнопки поиска после ввода текста."""
         main_page = MainPage(page)
         main_page.open_main_page()
-        assert main_page.is_element_visible(
-            main_page.SEARCH_INPUT
-        ), "Поле поиска не видно"
+    
+        assert main_page.is_element_visible(main_page.SEARCH_INPUT), "Поле поиска не видно"
+    
+        main_page.fill_input(main_page.SEARCH_INPUT, "телефон")
+        page.wait_for_timeout(500)
+    
+        assert main_page.is_search_button_visible(), "Кнопка поиска не появилась"
 
     def test_search_by_product_name(self, page):
         """Тест 3: Поиск по названию товара."""
@@ -144,14 +147,19 @@ class TestSearch:
         assert suggestions.first.is_visible(), "Блок автодополнения не видим"
 
     def test_clear_search_field(self, page):
-        """Тест 12: Очистка поля поиска."""
+        """Тест 12: Очистка поля поиска через кнопку 'Очистить поиск'."""
         main_page = MainPage(page)
         main_page.open_main_page()
         main_page.fill_input(main_page.SEARCH_INPUT, "телефон")
 
-        main_page.page.locator(main_page.SEARCH_INPUT).clear()
+        input_value = main_page.page.locator(main_page.SEARCH_INPUT).input_value()
+        assert input_value == "телефон", "Поле не заполнилось"
+
+        result = main_page.clear_search_field()
+        assert result, "Не удалось нажать на кнопку очистки"
+
         value = main_page.page.locator(main_page.SEARCH_INPUT).input_value()
-        assert value == "", "Поле не очистилось"
+        assert value == "", "Поле не очистилось после нажатия на 'Очистить поиск'"
 
     def test_search_with_filter(self, page):
         """Тест 13: Поиск с применением фильтра."""
@@ -181,7 +189,6 @@ class TestSearch:
         count_before = search_page.get_products_count()
         assert count_before > 0, "Нет товаров на странице"
 
-        # Плавный скролл для подгрузки товаров
         for _ in range(5):
             page.mouse.wheel(0, 1000)
             page.wait_for_timeout(1000)

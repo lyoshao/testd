@@ -9,7 +9,6 @@ from pages.product_page import ProductPage
 class TestProduct:
     """Тесты для карточки товара Wildberries."""
 
-    # Поисковые запросы
     SEARCH_QUERIES = {
         "phone": "телефон",
         "laptop": "ноутбук",
@@ -279,7 +278,6 @@ class TestProduct:
         result = product_page.click_product_image()
         assert result, "Не удалось кликнуть по изображению"
 
-        # Проверяем, что открылось полноэкранное изображение
         fullscreen = page.locator("div[class*='mainSlider--Bp49v']")
         assert fullscreen.count() > 0, "Полноэкранное изображение не открылось"
 
@@ -310,7 +308,6 @@ class TestProduct:
 
         search_page.click_first_product()
 
-        # Скроллим вниз до блока "Смотрите также"
         page.mouse.wheel(0, 1000)
         page.wait_for_timeout(2000)
 
