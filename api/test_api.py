@@ -1,95 +1,80 @@
-"""API тесты для Fake Store API."""
+"""API тесты для JSONPlaceholder."""
 
-import os
 import allure
 import pytest
 from api.api_client import APIClient
 
 
 @allure.epic("Тестирование API")
-@allure.feature("Проверка продуктов")
-class TestProductsAPI:
-    """Тесты для продуктов."""
+@allure.feature("Проверка данных")
+class TestJSONPlaceholderAPI:
+    """Тесты для JSONPlaceholder API."""
 
-    @allure.story("Получение всех продуктов")
-    def test_get_all_products(self):
-        """Тест 1: Получение списка всех продуктов."""
+    @allure.story("Получение постов")
+    def test_get_all_posts(self):
+        """Тест 1: Получение списка всех постов."""
         client = APIClient()
-        response = client.get("products")
+        response = client.get("posts")
 
         assert response.status_code == 200, f"Ошибка: {response.status_code}"
+        posts = response.json()
+        assert isinstance(posts, list), "Ответ должен быть списком"
+        assert len(posts) > 0, "Список постов не должен быть пустым"
+        assert len(posts) == 100, "Должно быть 100 постов"
 
-        products = response.json()
-        assert isinstance(products, list), "Ответ должен быть списком"
-        assert len(products) > 0, "Список продуктов не должен быть пустым"
-        assert len(products) == 20, "Должно быть 20 продуктов"
-
-    @allure.story("Получение продукта по ID")
-    def test_get_product_by_id(self):
-        """Тест 2: Получение продукта по ID."""
+    @allure.story("Получение поста по ID")
+    def test_get_post_by_id(self):
+        """Тест 2: Получение поста по ID."""
         client = APIClient()
-        response = client.get("products/1")
+        response = client.get("posts/1")
 
         assert response.status_code == 200, f"Ошибка: {response.status_code}"
+        post = response.json()
+        assert post["id"] == 1, "ID должен быть 1"
+        assert "title" in post, "Должно быть поле 'title'"
+        assert "body" in post, "Должно быть поле 'body'"
+        assert "userId" in post, "Должно быть поле 'userId'"
 
-        product = response.json()
-        assert product["id"] == 1, "ID должен быть 1"
-        assert "title" in product, "Должно быть поле 'title'"
-        assert "price" in product, "Должно быть поле 'price'"
-        assert "category" in product, "Должно быть поле 'category'"
-
-    @allure.story("Получение категорий")
-    def test_get_all_categories(self):
-        """Тест 3: Получение списка всех категорий."""
+    @allure.story("Получение пользователей")
+    def test_get_all_users(self):
+        """Тест 3: Получение списка всех пользователей."""
         client = APIClient()
-        response = client.get("products/categories")
+        response = client.get("users")
 
         assert response.status_code == 200, f"Ошибка: {response.status_code}"
+        users = response.json()
+        assert isinstance(users, list), "Ответ должен быть списком"
+        assert len(users) > 0, "Список пользователей не должен быть пустым"
+        assert len(users) == 10, "Должно быть 10 пользователей"
 
-        categories = response.json()
-        assert isinstance(categories, list), "Ответ должен быть списком"
-        assert len(categories) > 0, "Должны быть категории"
-
-        expected_categories = [
-            "electronics",
-            "jewelery",
-            "men's clothing",
-            "women's clothing"
-        ]
-        for category in expected_categories:
-            assert category in categories, f"Категория '{category}' не найдена"
-
-
-@allure.epic("Тестирование API")
-@allure.feature("Авторизация")
-class TestAuthAPI:
-    """Тесты для авторизации."""
-
-    @allure.story("Успешная авторизация")
-    def test_login_success(self):
-        """Тест 4: Успешная аутентификация."""
+    @allure.story("Создание поста")
+    def test_create_post(self):
+        """Тест 4: Создание нового поста."""
         client = APIClient()
-        credentials = {
-            "username": "johnd",
-            "password": "m38rmF$"
+        new_post = {
+            "title": "Test Post",
+            "body": "This is a test post",
+            "userId": 1
         }
-        response = client.post("auth/login", json=credentials)
+        response = client.post("posts", json=new_post)
 
         assert response.status_code == 201, f"Ожидался 201, получен {response.status_code}"
+        post = response.json()
+        assert "id" in post, "Должен быть получен ID"
+        assert post["title"] == new_post["title"], "Название не совпадает"
+        assert post["body"] == new_post["body"], "Тело не совпадает"
 
-        token = response.json()
-        assert "token" in token, "Должен быть получен токен"
-        assert isinstance(token["token"], str), "Токен должен быть строкой"
-        assert len(token["token"]) > 0, "Токен не должен быть пустым"
-
-    @allure.story("Негативные сценарии")
-    def test_login_fail_wrong_password(self):
-        """Тест 5: Вход с неверным паролем."""
+    @allure.story("Получение комментариев")
+    def test_get_comments(self):
+        """Тест 5: Получение комментариев к посту."""
         client = APIClient()
-        credentials = {
-            "username": "johnd",
-            "password": "wrongpassword"
-        }
-        response = client.post("auth/login", json=credentials)
+        response = client.get("posts/1/comments")
 
-        assert response.status_code == 401, f"Ожидался 401, получен {response.status_code}"
+        assert response.status_code == 200, f"Ошибка: {response.status_code}"
+        comments = response.json()
+        assert isinstance(comments, list), "Ответ должен быть списком"
+        assert len(comments) > 0, "Должны быть комментарии"
+        assert "postId" in comments[0], "Должно быть поле 'postId'"
+        assert "name" in comments[0], "Должно быть поле 'name'"
+        assert "email" in comments[0], "Должно быть поле 'email'"
+        assert "body" in comments[0], "Должно быть поле 'body'"
