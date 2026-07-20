@@ -1,10 +1,13 @@
 """Тесты для поиска."""
 
+import allure
 import pytest
 from pages.main_page import MainPage
 from pages.search_page import SearchPage
 
 
+@allure.epic("UI тестирование")
+@allure.feature("Поиск")
 class TestSearch:
     """Тесты для поиска на Wildberries."""
 
@@ -19,6 +22,8 @@ class TestSearch:
         "clothes": "одежда"
     }
 
+    @allure.story("Поле поиска")
+    @allure.title("Проверка видимости поля поиска")
     def test_search_input_is_visible(self, page):
         """Тест 1: Проверка видимости поля поиска."""
         main_page = MainPage(page)
@@ -27,18 +32,22 @@ class TestSearch:
             main_page.SEARCH_INPUT
         ), "Поле поиска не видно"
 
+    @allure.story("Поле поиска")
+    @allure.title("Проверка появления кнопки поиска после ввода текста")
     def test_search_button_is_visible(self, page):
         """Тест 2: Проверка появления кнопки поиска после ввода текста."""
         main_page = MainPage(page)
         main_page.open_main_page()
-    
+
         assert main_page.is_element_visible(main_page.SEARCH_INPUT), "Поле поиска не видно"
-    
+
         main_page.fill_input(main_page.SEARCH_INPUT, "телефон")
         page.wait_for_timeout(500)
-    
+
         assert main_page.is_search_button_visible(), "Кнопка поиска не появилась"
 
+    @allure.story("Поиск")
+    @allure.title("Поиск по названию товара")
     def test_search_by_product_name(self, page):
         """Тест 3: Поиск по названию товара."""
         main_page = MainPage(page)
@@ -52,6 +61,8 @@ class TestSearch:
         count = search_page.get_products_count()
         assert count > 0, "Товары не найдены"
 
+    @allure.story("Поиск")
+    @allure.title("Поиск по бренду")
     def test_search_by_brand(self, page):
         """Тест 4: Поиск по бренду."""
         main_page = MainPage(page)
@@ -62,6 +73,8 @@ class TestSearch:
         count = search_page.get_products_count()
         assert count > 0, "Товары бренда не найдены"
 
+    @allure.story("Поиск")
+    @allure.title("Поиск с пустым запросом")
     def test_search_empty_query(self, page):
         """Тест 5: Поиск с пустым запросом."""
         main_page = MainPage(page)
@@ -74,6 +87,8 @@ class TestSearch:
         assert search_input.is_enabled(), "Поле поиска не активно"
         assert page.url == "https://www.wildberries.by/", "Мы не на главной странице"
 
+    @allure.story("Поиск")
+    @allure.title("Поиск со специальными символами")
     def test_search_special_characters(self, page):
         """Тест 6: Поиск со специальными символами."""
         main_page = MainPage(page)
@@ -84,6 +99,8 @@ class TestSearch:
         count = search_page.get_products_count()
         assert count >= 0, "Ошибка при поиске со спецсимволами"
 
+    @allure.story("Поиск")
+    @allure.title("Поиск с очень длинным запросом")
     def test_search_long_query(self, page):
         """Тест 7: Поиск с очень длинным запросом."""
         main_page = MainPage(page)
@@ -94,6 +111,8 @@ class TestSearch:
         input_value = page.locator("input#searchInput").input_value()
         assert long_query in input_value, "Длинный запрос не отобразился в поле поиска"
 
+    @allure.story("Поиск")
+    @allure.title("Поиск по числовому запросу")
     def test_search_with_numbers(self, page):
         """Тест 8: Поиск по числовому запросу."""
         main_page = MainPage(page)
@@ -104,6 +123,8 @@ class TestSearch:
         count = search_page.get_products_count()
         assert count >= 0, "Система упала при поиске по числам"
 
+    @allure.story("Результаты поиска")
+    @allure.title("Проверка, что результаты содержат запрос")
     def test_search_results_contain_query(self, page):
         """Тест 9: Проверка, что результаты содержат запрос."""
         main_page = MainPage(page)
@@ -119,6 +140,8 @@ class TestSearch:
             assert query.lower() in first_title or "футбол" in first_title, \
                 "Результаты не содержат запрос"
 
+    @allure.story("Поиск")
+    @allure.title("Поиск без учета регистра")
     def test_search_case_insensitive(self, page):
         """Тест 10: Поиск без учета регистра."""
         main_page = MainPage(page)
@@ -135,6 +158,8 @@ class TestSearch:
 
         assert count1 >= 0 and count2 >= 0, "Оба запроса должны работать"
 
+    @allure.story("Поле поиска")
+    @allure.title("Проверка автодополнения при вводе")
     def test_search_autocomplete(self, page):
         """Тест 11: Проверка автодополнения при вводе."""
         main_page = MainPage(page)
@@ -146,8 +171,10 @@ class TestSearch:
         assert suggestions.count() > 0, "Блок автодополнения не появился"
         assert suggestions.first.is_visible(), "Блок автодополнения не видим"
 
+    @allure.story("Поле поиска")
+    @allure.title("Очистка поля поиска через кнопку 'крестик'")
     def test_clear_search_field(self, page):
-        """Тест 12: Очистка поля поиска через кнопку 'Очистить поиск'."""
+        """Тест 12: Очистка поля поиска через кнопку 'крестик'."""
         main_page = MainPage(page)
         main_page.open_main_page()
         main_page.fill_input(main_page.SEARCH_INPUT, "телефон")
@@ -159,8 +186,10 @@ class TestSearch:
         assert result, "Не удалось нажать на кнопку очистки"
 
         value = main_page.page.locator(main_page.SEARCH_INPUT).input_value()
-        assert value == "", "Поле не очистилось после нажатия на 'Очистить поиск'"
+        assert value == "", "Поле не очистилось после нажатия на 'крестик'"
 
+    @allure.story("Фильтры")
+    @allure.title("Поиск с применением фильтра")
     def test_search_with_filter(self, page):
         """Тест 13: Поиск с применением фильтра."""
         main_page = MainPage(page)
@@ -178,6 +207,8 @@ class TestSearch:
         filter_count = search_page.get_filter_count()
         assert filter_count > 0, "Нет доступных фильтров"
 
+    @allure.story("Результаты поиска")
+    @allure.title("Проверка подгрузки товаров при скролле")
     def test_infinite_scroll_works(self, page):
         """Тест 14: Проверка подгрузки товаров при скролле."""
         main_page = MainPage(page)
@@ -196,6 +227,8 @@ class TestSearch:
         count_after = search_page.get_products_count()
         assert count_after > count_before, "Товары не подгрузились при скролле"
 
+    @allure.story("Результаты поиска")
+    @allure.title("Проверка формата отображения количества результатов")
     def test_search_results_count_format(self, page):
         """Тест 15: Проверка формата отображения количества результатов."""
         main_page = MainPage(page)

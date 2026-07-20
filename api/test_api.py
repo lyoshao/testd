@@ -1,11 +1,15 @@
 """API тесты для Fake Store API."""
 
+import allure
 from api.api_client import APIClient
 
 
+@allure.epic("Тестирование API")
 class TestFakeStoreAPI:
     """Тесты для Fake Store API."""
 
+    @allure.feature("Проверка продуктов")
+    @allure.story("Получение всех продуктов")
     def test_get_all_products(self):
         """Тест 1: Получение списка всех продуктов."""
         client = APIClient()
@@ -16,6 +20,8 @@ class TestFakeStoreAPI:
         assert len(products) > 0, "Список продуктов не должен быть пустым"
         assert len(products) == 20, "Должно быть 20 продуктов"
 
+    @allure.feature("Проверка продуктов")
+    @allure.story("Получение продукта по ID")
     def test_get_product_by_id(self):
         """Тест 2: Получение продукта по ID."""
         client = APIClient()
@@ -27,6 +33,8 @@ class TestFakeStoreAPI:
         assert "price" in product, "Должно быть поле 'price'"
         assert "category" in product, "Должно быть поле 'category'"
 
+    @allure.feature("Проверка продуктов")
+    @allure.story("Получение категорий")
     def test_get_all_categories(self):
         """Тест 3: Получение списка всех категорий."""
         client = APIClient()
@@ -39,6 +47,8 @@ class TestFakeStoreAPI:
         for category in expected_categories:
             assert category in categories, f"Категория '{category}' не найдена"
 
+    @allure.feature("Авторизация")
+    @allure.story("Успешная авторизация")
     def test_login_success(self):
         """Тест 4: Успешная аутентификация."""
         client = APIClient()
@@ -53,6 +63,8 @@ class TestFakeStoreAPI:
         assert isinstance(token["token"], str), "Токен должен быть строкой"
         assert len(token["token"]) > 0, "Токен не должен быть пустым"
 
+    @allure.feature("Авторизация")
+    @allure.story("Негативные сценарии")
     def test_login_fail_wrong_password(self):
         """Тест 5: Вход с неверным паролем."""
         client = APIClient()

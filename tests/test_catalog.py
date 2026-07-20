@@ -1,14 +1,19 @@
 """Тесты для каталога."""
 
+import allure
 import pytest
 from pages.main_page import MainPage
 
 
+@allure.epic("UI тестирование")
+@allure.feature("Каталог")
 class TestCatalog:
     """Тесты для каталога Wildberries."""
 
     CATEGORIES_WITH_SUB = ["Женщинам", "Мужчинам", "Электроника", "Дом", "Спорт", "Акции"]
 
+    @allure.story("Кнопка каталога")
+    @allure.title("Проверка наличия кнопки каталога")
     def test_catalog_button_exists(self, page):
         """Тест 1: Проверка наличия кнопки каталога."""
         main_page = MainPage(page)
@@ -16,6 +21,8 @@ class TestCatalog:
         button = page.locator("button[data-wba-header-name='Catalog']")
         assert button.count() > 0, "Кнопка каталога не найдена"
 
+    @allure.story("Кнопка каталога")
+    @allure.title("Проверка видимости кнопки каталога")
     def test_catalog_button_visible(self, page):
         """Тест 2: Проверка видимости кнопки каталога."""
         main_page = MainPage(page)
@@ -23,6 +30,8 @@ class TestCatalog:
         button = page.locator("button[data-wba-header-name='Catalog']")
         assert button.is_visible(), "Кнопка каталога не видна"
 
+    @allure.story("Панель каталога")
+    @allure.title("Проверка открытия панели каталога")
     def test_catalog_panel_opens(self, page):
         """Тест 3: Проверка открытия панели каталога."""
         main_page = MainPage(page)
@@ -31,6 +40,8 @@ class TestCatalog:
         assert result, "Не удалось открыть панель каталога"
         assert main_page.is_catalog_panel_open(), "Панель каталога не открылась"
 
+    @allure.story("Панель каталога")
+    @allure.title("Проверка наличия категорий в панели")
     def test_catalog_panel_has_categories(self, page):
         """Тест 4: Проверка наличия категорий в панели."""
         main_page = MainPage(page)
@@ -39,6 +50,8 @@ class TestCatalog:
         categories = main_page.get_catalog_categories()
         assert len(categories) > 0, "В панели каталога нет категорий"
 
+    @allure.story("Панель каталога")
+    @allure.title("Проверка появления подкатегорий при клике на категорию")
     def test_catalog_panel_has_subcategories(self, page):
         """Тест 5: Проверка появления подкатегорий при клике на категорию."""
         main_page = MainPage(page)
@@ -56,6 +69,8 @@ class TestCatalog:
 
         assert found_subcategories, "Не удалось найти подкатегории ни для одной категории"
 
+    @allure.story("Панель каталога")
+    @allure.title("Проверка закрытия панели каталога")
     def test_catalog_panel_close(self, page):
         """Тест 6: Проверка закрытия панели каталога."""
         main_page = MainPage(page)
@@ -67,6 +82,8 @@ class TestCatalog:
         page.wait_for_timeout(1000)
         assert not main_page.is_catalog_panel_open(), "Панель не закрылась"
 
+    @allure.story("Категории")
+    @allure.title("Проверка наличия категории {category}")
     @pytest.mark.parametrize("category", [
         "Электроника",
         "Дом",
@@ -81,6 +98,8 @@ class TestCatalog:
         main_page.open_catalog()
         assert main_page.is_category_exists(category), f"Категория '{category}' не найдена"
 
+    @allure.story("Категории")
+    @allure.title("Проверка наличия категорий одежды")
     def test_catalog_panel_has_clothing(self, page):
         """Тест 12: Проверка наличия категорий одежды."""
         main_page = MainPage(page)
@@ -94,6 +113,8 @@ class TestCatalog:
         )
         assert has_clothing, "Категория одежды не найдена"
 
+    @allure.story("Категории")
+    @allure.title("Проверка наличия категорий для детей")
     def test_catalog_panel_has_children(self, page):
         """Тест 13: Проверка наличия категорий для детей."""
         main_page = MainPage(page)
@@ -106,6 +127,8 @@ class TestCatalog:
         )
         assert has_children, "Категория 'Детям' не найдена"
 
+    @allure.story("Категории")
+    @allure.title("Проверка наличия раздела со скидками")
     def test_catalog_panel_has_sale(self, page):
         """Тест 14: Проверка наличия раздела со скидками."""
         main_page = MainPage(page)
@@ -119,6 +142,8 @@ class TestCatalog:
         )
         assert has_sale, "Раздел со скидками не найден"
 
+    @allure.story("Категории")
+    @allure.title("Клик по категории 'Акции' и проверка страницы акций")
     def test_catalog_panel_click_promotions(self, page):
         """Тест 15: Клик по категории 'Акции' и проверка страницы акций."""
         main_page = MainPage(page)

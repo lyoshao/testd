@@ -27,6 +27,26 @@ class MainPage(BasePage):
         self.page.keyboard.press("Enter")
         self.page.wait_for_load_state("domcontentloaded")
         self.page.wait_for_timeout(1500)
+    
+    def is_search_button_visible(self) -> bool:
+        """Проверяет, видима ли кнопка поиска."""
+        try:
+            search_button = self.page.locator("button.search-catalog__btn--search")
+            return search_button.count() > 0 and search_button.first.is_visible()
+        except Exception:
+            return False
+
+    def clear_search_field(self) -> bool:
+        """Очищает поле поиска через кнопку 'Очистить поиск'."""
+        try:
+            clear_button = self.page.locator("button.search-catalog__btn--clear")
+            if clear_button.count() > 0 and clear_button.is_visible():
+                clear_button.click()
+                self.page.wait_for_timeout(500)
+                return True
+            return False
+        except Exception:
+            return False
 
     def open_catalog(self) -> bool:
         """Открывает панель каталога."""
@@ -145,23 +165,4 @@ class MainPage(BasePage):
             return False
         except Exception as e:
             print(f"Ошибка при проверке подкатегории '{subcategory_name}': {e}")
-            return False
-    def clear_search_field(self) -> bool:
-        """Очищает поле поиска через кнопку 'Очистить поиск'."""
-        try:
-            clear_button = self.page.locator("button.search-catalog__btn--clear")
-            if clear_button.count() > 0 and clear_button.is_visible():
-                clear_button.click()
-                self.page.wait_for_timeout(500)
-                return True
-            return False
-        except Exception:
-            return False
-    
-    def is_search_button_visible(self) -> bool:
-        """Проверяет, видима ли кнопка поиска."""
-        try:
-            search_button = self.page.locator("button.search-catalog__btn--search")
-            return search_button.count() > 0 and search_button.first.is_visible()
-        except Exception:
             return False

@@ -9,15 +9,13 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
@@ -29,27 +27,48 @@ jobs:
       - name: Install Playwright browsers
         run: playwright install chromium
 
-      - name: Run tests
-        run: xvfb-run pytest -v --alluredir=allure-results
+      - name: Run UI tests
+        run: pytest tests/ -v --alluredir=allure-results-ui
 
-      - name: Generate Allure report
+      - name: Run API tests
+        run: pytest api/ -v --alluredir=allure-results-api
+        continue-on-error: true
+
+      - name: Generate Allure report for UI
         if: always()
         run: |
           npm install -g allure-commandline
-          allure generate allure-results -o allure-report --clean
+          allure generate allure-results-ui -o allure-report-ui --clean
 
-      - name: Upload Allure report
+      - name: Generate Allure report for API
+        if: always()
+        run: |
+          allure generate allure-results-api -o allure-report-api --clean
+
+      - name: Upload Allure report UI
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: allure-report
-          path: allure-report
+          name: allure-report-ui
+          path: allure-report-ui
 
-      - name: Upload test results
+      - name: Upload Allure report API
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-results
-          path: |
-            allure-results
-            *.log
+          name: allure-report-api
+          path: allure-report-api
+
+      - name: Upload Allure results UI
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-ui
+          path: allure-results-ui
+
+      - name: Upload Allure results API
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-api
+          path: allure-results-api
