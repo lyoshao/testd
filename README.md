@@ -37,4 +37,4 @@ docker run --rm Diploma-QAP
 
 ## Материалы и контакты
 * Презентация в папке `docs`.
-* Автор: [@lyoshao](https://github.com)
+* Автор: [@lyoshao](https://github.com/lyoshao)

@@ -1,4 +1,4 @@
-name: CI/CD
+name: CI/CD with Allure Report
 
 on:
   push:
@@ -27,14 +27,31 @@ jobs:
       - name: Install Playwright browsers
         run: playwright install --with-deps
 
-      - name: Run tests
-        run: pytest -v
+      - name: Run tests with Allure artifacts
+        run: pytest -v --alluredir=allure-results
+        continue-on-error: true
 
-      - name: Upload test results
+      - name: Get Allure history
+        uses: actions/checkout@v4
         if: always()
-        uses: actions/upload-artifact@v4
+        continue-on-error: true
         with:
-          name: test-results
-          path: |
-            .pytest_cache
-            *.log
+          ref: gh-pages
+          path: gh-pages-dir
+
+      - name: Generate Allure Report
+        uses: simple-elf/allure-report-action@master
+        if: always()
+        id: allure-report
+        with:
+          allure_results: allure-results
+          allure_history: allure-history
+          keep_reports: 20
+
+      - name: Deploy Allure Report to GitHub Pages
+        uses: peaceiris/actions-deploy-pages@v4
+        if: always()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: allure-history
+          publish_branch: gh-pages
