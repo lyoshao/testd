@@ -9,8 +9,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -29,62 +28,8 @@ jobs:
         run: playwright install chromium
 
       - name: Run UI tests
-        run: |
-          pytest tests/ -v \
-            --alluredir=allure-results-ui \
-            --maxfail=5 \
-            --tb=short \
-            --disable-warnings
+        run: pytest tests/ -v
 
       - name: Run API tests
-        run: |
-          pytest api/ -v \
-            --alluredir=allure-results-api \
-            --maxfail=3 \
-            --tb=short \
-            --disable-warnings || true
+        run: pytest api/ -v || true
         continue-on-error: true
-
-      - name: Generate Allure report for UI
-        if: always()
-        run: |
-          npm install -g allure-commandline
-          allure generate allure-results-ui -o allure-report-ui --clean
-
-      - name: Generate Allure report for API
-        if: always()
-        run: |
-          npm install -g allure-commandline
-          if [ -d "allure-results-api" ] && [ "$(ls -A allure-results-api)" ]; then
-            allure generate allure-results-api -o allure-report-api --clean
-          else
-            echo "No API results found. Skipping report generation."
-          fi
-
-      - name: Upload Allure report UI
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: allure-report-ui
-          path: allure-report-ui
-
-      - name: Upload Allure results API
-        if: always() && hashFiles('allure-results-api') != ''
-        uses: actions/upload-artifact@v4
-        with:
-          name: allure-results-api
-          path: allure-results-api
-
-      - name: Upload Allure results UI
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: allure-results-ui
-          path: allure-results-ui
-
-      - name: Upload Allure report API
-        if: always() && hashFiles('allure-report-api') != ''
-        uses: actions/upload-artifact@v4
-        with:
-          name: allure-report-api
-          path: allure-report-api
