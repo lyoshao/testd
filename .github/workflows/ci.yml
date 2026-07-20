@@ -28,10 +28,20 @@ jobs:
         run: playwright install chromium
 
       - name: Run UI tests
-        run: pytest tests/ -v --alluredir=allure-results-ui
+        run: |
+          pytest tests/ -v \
+            --alluredir=allure-results-ui \
+            --maxfail=5 \
+            --tb=short \
+            --disable-warnings
 
       - name: Run API tests
-        run: pytest api/ -v --alluredir=allure-results-api
+        run: |
+          pytest api/ -v \
+            --alluredir=allure-results-api \
+            --maxfail=3 \
+            --tb=short \
+            --disable-warnings
         continue-on-error: true
 
       - name: Generate Allure report for UI
