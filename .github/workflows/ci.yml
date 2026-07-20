@@ -9,6 +9,8 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       - name: Checkout code
@@ -28,7 +30,7 @@ jobs:
         run: playwright install chromium
 
       - name: Run tests
-        run: pytest -v --alluredir=allure-results
+        run: xvfb-run pytest -v --alluredir=allure-results
 
       - name: Generate Allure report
         if: always()
