@@ -1,5 +1,6 @@
 """Фикстуры для Playwright."""
 
+import os
 import pytest
 from playwright.sync_api import sync_playwright
 
@@ -7,8 +8,9 @@ from playwright.sync_api import sync_playwright
 @pytest.fixture(scope="function")
 def page():
     with sync_playwright() as p:
+        is_ci = os.environ.get("CI") == "true"
         browser = p.chromium.launch(
-            headless=False,
+            headless=is_ci,
             slow_mo=500
         )
         context = browser.new_context(
