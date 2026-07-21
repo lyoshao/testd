@@ -135,11 +135,15 @@ class TestSearch:
 
         search_page = SearchPage(page)
         titles = search_page.get_product_titles_list()
+    
+        found = False
+        for title in titles:
+            title_lower = title.lower()
+            if query.lower() in title_lower or "футбол" in title_lower:
+                found = True
+                break
 
-        if titles:
-            first_title = titles[0].lower() if titles[0] else ""
-            assert query.lower() in first_title or "футбол" in first_title, \
-                "Результаты не содержат запрос"
+        assert found, f"Ни один товар не содержит '{query}' или 'футбол'"
 
     @allure.story("Поиск")
     @allure.title("Поиск без учета регистра")
