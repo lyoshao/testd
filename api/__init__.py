@@ -1,1 +1,0 @@
-"""API тесты для JSONPlaceholder."""

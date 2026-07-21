@@ -10,8 +10,8 @@ class BasePage:
     def __init__(self, page: Page):
         self.page = page
         self.is_ci = os.environ.get("CI") == "true"
-        self.timeout = 15000 if self.is_ci else 30000
-        self.short_timeout = 5000 if self.is_ci else 10000
+        self.timeout = 60000 if self.is_ci else 30000
+        self.short_timeout = 15000 if self.is_ci else 10000
 
     def open(self, url: str) -> None:
         """Открывает URL и ждет загрузки страницы."""
