@@ -176,9 +176,9 @@ class TestSearch:
         assert suggestions.first.is_visible(), "Блок автодополнения не видим"
 
     @allure.story("Поле поиска")
-    @allure.title("Очистка поля поиска через кнопку 'крестик'")
+    @allure.title("Очистка поля поиска через кнопку 'Очистить поиск'")
     def test_clear_search_field(self, page):
-        """Тест 12: Очистка поля поиска через кнопку 'крестик'."""
+        """Тест 12: Очистка поля поиска через кнопку 'Очистить поиск'."""
         main_page = MainPage(page)
         main_page.open_main_page()
         main_page.fill_input(main_page.SEARCH_INPUT, "телефон")
@@ -190,7 +190,7 @@ class TestSearch:
         assert result, "Не удалось нажать на кнопку очистки"
 
         value = main_page.page.locator(main_page.SEARCH_INPUT).input_value()
-        assert value == "", "Поле не очистилось после нажатия на 'крестик'"
+        assert value == "", "Поле не очистилось после нажатия на 'Очистить поиск'"
 
     @allure.story("Фильтры")
     @allure.title("Поиск с применением фильтра")
