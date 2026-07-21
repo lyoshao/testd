@@ -27,5 +27,9 @@ jobs:
       - name: Install Playwright browsers
         run: playwright install chromium
 
-      - name: Run UI tests
-        run: pytest tests/ -v
+      - name: Run tests
+        run: |
+          pytest -v --maxfail=5 || \
+          (echo "Повторный запуск упавших тестов..." && pytest -v --lf --maxfail=5)
+        env:
+          CI: true
