@@ -10,7 +10,6 @@ from pages.main_page import MainPage
 class TestCatalog:
     """Тесты для каталога Wildberries."""
 
-    # Категории, у которых точно есть подкатегории
     CATEGORIES_WITH_SUB = [
         "Женщинам",
         "Мужчинам",

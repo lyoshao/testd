@@ -18,7 +18,7 @@ class BasePage:
         try:
             self.page.goto(url, timeout=self.timeout)
             self.page.wait_for_load_state("domcontentloaded")
-            self.page.wait_for_timeout(1000 if self.is_ci else 500)
+            self.page.wait_for_timeout(500 if self.is_ci else 1000)
         except PlaywrightTimeoutError as e:
             print(f"Таймаут при открытии {url}: {e}")
             raise

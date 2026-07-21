@@ -6,7 +6,6 @@ from pages.base_page import BasePage
 class ProductPage(BasePage):
     """Карточка товара Wildberries."""
 
-    # Локаторы
     PRODUCT_NAME = "h2[class*='mo-typography_variant_title3']"
     PRODUCT_PRICE = "span[class*='priceBlockPrice'] ins"
     ADD_TO_CART_BUTTON = "button[aria-label='Добавить в корзину']"

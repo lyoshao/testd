@@ -11,7 +11,6 @@ from pages.search_page import SearchPage
 class TestSearch:
     """Тесты для поиска на Wildberries."""
 
-    # Поисковые запросы
     QUERIES = {
         "product": "кроссовки",
         "brand": "Adidas",
@@ -135,7 +134,7 @@ class TestSearch:
 
         search_page = SearchPage(page)
         titles = search_page.get_product_titles_list()
-    
+
         found = False
         for title in titles:
             title_lower = title.lower()

@@ -6,7 +6,6 @@ from pages.base_page import BasePage
 class SearchPage(BasePage):
     """Страница результатов поиска Wildberries."""
 
-    # Локаторы
     PRODUCT_CARDS = "article.product-card"
     PRODUCT_TITLES = "span.product-card__name"
     FILTER_BUTTON = "button.dropdown-filter__btn--all"

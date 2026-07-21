@@ -1,6 +1,6 @@
 # Дипломный проект: Автоматизация тестирования
 
-Автоматизация E2E UI-тестирования (Wildberries) и API (Fake Store API) с использованием Page Object Model (POM).
+Автоматизация E2E UI-тестирования (Wildberries) и API (JSONPlaceholder) с использованием Page Object Model (POM).
 
 ## Технологический стек
 * **Язык программирования:** Python 3.10+
@@ -10,7 +10,7 @@
 
 ## Покрытие (55 сценариев)
 * **UI (50 тестов):** Поиск (15), Каталог (15), Карточка товара (20).
-* **API (5 тестов):** CRUD операции (GET/POST), авторизация, SQLite.
+* **API (5 тестов):** CRUD операции (GET/POST), JSONPlaceholder.
 
 ## Инструкция по запуску тестов локально
 ```bash
@@ -31,8 +31,8 @@ allure serve allure-results
 
 ## Инструкция по запуску в Docker
 ```bash
-docker build -t Diploma-QAP
-docker run --rm Diploma-QAP
+docker build -t diploma-qap .
+docker run --rm diploma-qap
 ```
 
 ## Материалы и контакты

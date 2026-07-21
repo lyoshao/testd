@@ -7,7 +7,6 @@ from pages.base_page import BasePage
 class MainPage(BasePage):
     """Главная страница Wildberries."""
 
-    # Локаторы
     SEARCH_INPUT = "input#searchInput"
     CATALOG_BUTTON = "button[data-wba-header-name='Catalog']"
     CATALOG_CONTAINER = "div#menuBurger"
