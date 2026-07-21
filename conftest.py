@@ -12,7 +12,7 @@ def page():
         is_ci = os.environ.get("CI") == "true"
         browser = p.chromium.launch(
             headless=is_ci,
-            slow_mo=500
+            slow_mo=0 if is_ci else 500
         )
         context = browser.new_context(
             viewport={"width": 1920, "height": 1080},

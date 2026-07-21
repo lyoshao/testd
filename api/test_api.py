@@ -1,7 +1,6 @@
 """API тесты для JSONPlaceholder."""
 
 import allure
-import pytest
 from api.api_client import APIClient
 
 

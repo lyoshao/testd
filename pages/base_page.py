@@ -1,5 +1,6 @@
 """Базовая страница с общими методами."""
 
+import os
 from playwright.sync_api import Page, TimeoutError as PlaywrightTimeoutError
 
 
@@ -8,15 +9,16 @@ class BasePage:
 
     def __init__(self, page: Page):
         self.page = page
-        self.timeout = 30000
-        self.short_timeout = 10000
+        self.is_ci = os.environ.get("CI") == "true"
+        self.timeout = 15000 if self.is_ci else 30000
+        self.short_timeout = 5000 if self.is_ci else 10000
 
     def open(self, url: str) -> None:
         """Открывает URL и ждет загрузки страницы."""
         try:
             self.page.goto(url, timeout=self.timeout)
             self.page.wait_for_load_state("domcontentloaded")
-            self.page.wait_for_timeout(3000)
+            self.page.wait_for_timeout(1000 if self.is_ci else 500)
         except PlaywrightTimeoutError as e:
             print(f"Таймаут при открытии {url}: {e}")
             raise
